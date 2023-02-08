@@ -12,9 +12,17 @@ final class KeychainHelper{
     private init() {}
     
     /**
-     function saves the input data in Keychain as a  generic password. 'service' and 'account' attributes are used as primary key to save the data.
-    */
-    func saveGenericPassword(_ data: Data, service: String, account: String) -> Void {
+     Save input key into keychain.
+     
+     Saves the input data in Keychain as a  generic password. 'service' and 'account' attributes are used as primary key to save the data.
+     
+     - Parameters:
+     - account: String value to be used as Primary Key
+     - service: String value to be used as Primary Key
+     
+     - Returns: Status of Save item action
+     */
+    func saveKey(_ data: Data, service: String, account: String) -> Void {
         // Create query dict which can be passed  on to secItemAdd function
         let query = [
             kSecClass:  kSecClassGenericPassword,
@@ -53,6 +61,63 @@ final class KeychainHelper{
             }
             
         }
+        
+    }
+    
+    /**
+     Read key from keychain.
+     
+     Query Keychain based on Account and Service to find the key. 'service' and 'account' attributes are used as primary key to read the data.
+     
+     - Parameters:
+     - account: String value to be used as Primary Key
+     - service: String value to be used as Primary Key
+     
+     - Returns: Status of Save item action
+     */
+    
+    func getKey(service: String, account: String) -> Data? {
+        // Create query dict which can be passed  on to secItemAdd function
+        let query = [
+            kSecClass:  kSecClassGenericPassword,
+            kSecAttrAccount: account,
+            kSecAttrService: service,
+            kSecReturnData: true
+        ] as CFDictionary
+        
+        // result will capture the data in Keychain
+        var result: AnyObject?
+        
+        // calling keychain item add function and pass query dict as input
+        let status = SecItemCopyMatching(query, &result)
+        
+        return (result as? Data)
+    }
+    
+    /**
+     Read key from keychain.
+     
+     Query Keychain based on Account and Service to find the key. 'service' and 'account' attributes are used as primary key to read the data.
+     
+     - Parameters:
+     - account: String value to be used as Primary Key
+     - service: String value to be used as Primary Key
+     
+     - Returns: Status of Save item action
+     */
+    
+    func deleteKey(service: String, account: String) -> Void {
+        // Create query dict which can be passed  on to secItemAdd function
+        let query = [
+            kSecClass:  kSecClassGenericPassword,
+            kSecAttrAccount: account,
+            kSecAttrService: service
+        ] as CFDictionary
+                
+        // calling keychain item add function and pass query dict as input
+        let status = SecItemDelete(query)
+        
+        debugPrint("Delete Action response \(status)")
         
     }
 }

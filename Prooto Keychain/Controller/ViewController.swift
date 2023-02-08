@@ -34,19 +34,30 @@ class ViewController: UIViewController {
         
         let keychainHelper = KeychainHelper.standard
         
-        keychainHelper.saveGenericPassword(rawData, service: service, account: account)
+        keychainHelper.saveKey(rawData, service: service, account: account)
     }
     
     @IBAction func readPressed(_ sender: UIButton) {
-        print(dataTextfield.text!)
+        print("Reading from Keychain")
+        let keychainHelper = KeychainHelper.standard
+        
+        let rawData = keychainHelper.getKey(service: service, account: account)
+        if let rawData{
+            let data = String(data: rawData, encoding: String.Encoding.utf8)
+            print("Data retrievd from Keychain: \(data ?? "No Data")")
+        } else {
+            print("No key received")
+        }
     }
     
     @IBAction func updatePressed(_ sender: UIButton) {
         print(dataTextfield.text!)
+        savePressed(sender)
     }
     
     @IBAction func deletePressed(_ sender: UIButton) {
         print(dataTextfield.text!)
+        KeychainHelper.standard.deleteKey(service: service, account: account)
     }
     
 }
