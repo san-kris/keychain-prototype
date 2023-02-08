@@ -13,6 +13,7 @@
 		AA7514DA2993FD50000971BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA7514D82993FD50000971BB /* Main.storyboard */; };
 		AA7514DC2993FD52000971BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA7514DB2993FD52000971BB /* Assets.xcassets */; };
 		AA7514DF2993FD52000971BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA7514DD2993FD52000971BB /* LaunchScreen.storyboard */; };
+		AA7514EA2994015F000971BB /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7514E92994015F000971BB /* KeychainHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		AA7514DB2993FD52000971BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA7514DE2993FD52000971BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA7514E02993FD52000971BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA7514E92994015F000971BB /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +58,40 @@
 		AA7514D12993FD50000971BB /* Prooto Keychain */ = {
 			isa = PBXGroup;
 			children = (
+				AA7514E829940110000971BB /* Model */,
+				AA7514E72993FD85000971BB /* Controller */,
+				AA7514E62993FD78000971BB /* View */,
 				AA7514D22993FD50000971BB /* AppDelegate.swift */,
 				AA7514D42993FD50000971BB /* SceneDelegate.swift */,
-				AA7514D62993FD50000971BB /* ViewController.swift */,
-				AA7514D82993FD50000971BB /* Main.storyboard */,
 				AA7514DB2993FD52000971BB /* Assets.xcassets */,
 				AA7514DD2993FD52000971BB /* LaunchScreen.storyboard */,
 				AA7514E02993FD52000971BB /* Info.plist */,
 			);
 			path = "Prooto Keychain";
+			sourceTree = "<group>";
+		};
+		AA7514E62993FD78000971BB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				AA7514D82993FD50000971BB /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		AA7514E72993FD85000971BB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AA7514D62993FD50000971BB /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		AA7514E829940110000971BB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				AA7514E92994015F000971BB /* KeychainHelper.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +168,7 @@
 				AA7514D72993FD50000971BB /* ViewController.swift in Sources */,
 				AA7514D32993FD50000971BB /* AppDelegate.swift in Sources */,
 				AA7514D52993FD50000971BB /* SceneDelegate.swift in Sources */,
+				AA7514EA2994015F000971BB /* KeychainHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
