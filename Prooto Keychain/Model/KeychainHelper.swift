@@ -11,18 +11,20 @@ final class KeychainHelper{
     static let standard = KeychainHelper()
     private init() {}
     
+    
     /**
      Save input key into keychain.
      
      Saves the input data in Keychain as a  generic password. 'service' and 'account' attributes are used as primary key to save the data.
      
      - Parameters:
-     - account: String value to be used as Primary Key
-     - service: String value to be used as Primary Key
+         - account: String value to be used as Primary Key
+         - service: String value to be used as Primary Key
      
      - Returns: Status of Save item action
      */
     func saveKey(_ data: Data, service: String, account: String) -> Void {
+                
         // Create query dict which can be passed  on to secItemAdd function
         let query = [
             kSecClass:  kSecClassGenericPassword,
@@ -70,10 +72,10 @@ final class KeychainHelper{
      Query Keychain based on Account and Service to find the key. 'service' and 'account' attributes are used as primary key to read the data.
      
      - Parameters:
-     - account: String value to be used as Primary Key
-     - service: String value to be used as Primary Key
+         - account: String value to be used as Primary Key
+         - service: String value to be used as Primary Key
      
-     - Returns: Status of Save item action
+     - Returns:Item fromo Keychain
      */
     
     func getKey(service: String, account: String) -> Data? {
@@ -82,16 +84,36 @@ final class KeychainHelper{
             kSecClass:  kSecClassGenericPassword,
             kSecAttrAccount: account,
             kSecAttrService: service,
+            kSecMatchLimit:  kSecMatchLimitOne, // Alternatively use an integer or kSecMatchLimitAll. using All will return an array
+            kSecReturnAttributes: true,
             kSecReturnData: true
         ] as CFDictionary
         
         // result will capture the data in Keychain
-        var result: AnyObject?
+        var result: CFTypeRef?
         
         // calling keychain item add function and pass query dict as input
         let status = SecItemCopyMatching(query, &result)
         
-        return (result as? Data)
+        guard status != errSecItemNotFound else {
+            debugPrint("Key not found: Error code - \(status)")
+            return nil
+        }
+        guard status == errSecSuccess else {
+            debugPrint("Failed to retrieve Keychain: Error Code - \(status) ")
+            return nil
+        }
+                
+        guard let existingItem = result as? [String: Any],
+              let rawKey = existingItem[kSecValueData as String] as? Data,
+              let account  = existingItem[kSecAttrAccount as String] as? String,
+              let service = existingItem[kSecAttrService as String] as? String
+        else{
+            debugPrint("Failed to get data from Keychain")
+            return nil
+        }
+        print("Found key for Account: \(account) and Service: \(service)")
+        return rawKey
     }
     
     /**
@@ -119,5 +141,43 @@ final class KeychainHelper{
         
         debugPrint("Delete Action response \(status)")
         
+    }
+}
+
+extension KeychainHelper{
+    /**
+     Save input key of Codable object tye into keychain.
+     
+     Saves the input data in Keychain as a  generic password. 'service' and 'account' attributes are used as primary key to save the data.
+     
+     - Parameters:
+         - account: String value to be used as Primary Key
+         - service: String value to be used as Primary Key
+     
+     - Returns: Status of Save item action
+     */
+    func saveKey<T: Codable>(_ data: T, service: String, account: String) -> Void {
+        
+        // first convert input data to JSON encoding
+        do{
+            let encodedData = try JSONEncoder().encode(data)
+            saveKey(encodedData, service: service, account: account)
+        } catch{
+            debugPrint("Error while JSON encodig: \(error)")
+        }
+    }
+    
+    func getKey<T: Codable>(service: String, account: String, type: T.Type) -> T? {
+        do{
+            guard let encodedKey = getKey(service: service, account: account) else{
+                debugPrint("unable to find key")
+                return nil
+            }
+            let decodedKey = try JSONDecoder().decode(type, from: encodedKey)
+            return decodedKey
+        }catch{
+            debugPrint("Unable to decode Key using Decoder: \(error)")
+            return nil
+        }
     }
 }
